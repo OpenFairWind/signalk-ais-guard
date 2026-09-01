@@ -6,6 +6,8 @@ The automated suite covers plugin lifecycle/schema defaults, analytical geometry
 
 Release candidates must pass `npm ci --ignore-scripts`, `npm run build`, `npm test`, `npm run lint`, `npm audit --audit-level=high`, and `npm pack --dry-run`.
 
+The GitHub Actions CI workflow runs this quality gate for every pull request targeting `main` and every push to `main`.
+
 ## Local Signal K integration smoke test
 
 Pack the workspace with `npm pack`, install that tarball into a disposable or development Signal K instance, and restart the server. In **Apps & Plugins → Configuration**, confirm that AIS Guard is enabled, its complete schema renders, and its initial status reports that it is waiting for navigation data. Open `/signalk-ais-guard/` and exercise sort direction, risk filtering, and search; the page must continue refreshing without browser console errors. Verify `/plugins/signalk-ais-guard/targets` through the WebApp or an authenticated read-only request.
