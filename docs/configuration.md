@@ -1,5 +1,7 @@
 # Configuration
 
+![AIS Guard configuration schema rendered by Signal K](screenshots/configuration.png)
+
 ## Principle
 
 Configuration is part of the computational method. Every schema property has a default to support deterministic Signal K registry activation. Internally, Signal K navigation values remain SI; operator-facing thresholds use nautical miles, knots, minutes, and degrees where appropriate.

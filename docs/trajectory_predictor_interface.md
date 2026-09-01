@@ -34,6 +34,18 @@ The registry rejects malformed predictors and duplicate IDs. Registration is ava
 
 ## Predictor input contract
 
+```mermaid
+flowchart LR
+  Registry[Validated predictor registry] --> Input[Own record, target record, options, evaluation time]
+  Input --> Predictor[AGTPI v1 predictor]
+  Predictor -->|status: ok| Report[CPA, TCPA, confidence, optional paths]
+  Predictor -->|status: abstain| Abstain[Reasoned abstention]
+  Report --> Normalize[Core validation and normalization]
+  Abstain --> Normalize
+  Normalize --> Classifier[Common core risk classifier]
+  Classifier --> Ensemble[Core ordinal majority]
+```
+
 `predict(input)` is synchronous in AGTPI v1 and receives:
 
 ```js

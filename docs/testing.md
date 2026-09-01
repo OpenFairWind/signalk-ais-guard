@@ -6,6 +6,12 @@ The automated suite covers plugin lifecycle/schema defaults, analytical geometry
 
 Release candidates must pass `npm ci --ignore-scripts`, `npm run build`, `npm test`, `npm run lint`, `npm audit --audit-level=high`, and `npm pack --dry-run`.
 
+## Local Signal K integration smoke test
+
+Pack the workspace with `npm pack`, install that tarball into a disposable or development Signal K instance, and restart the server. In **Apps & Plugins → Configuration**, confirm that AIS Guard is enabled, its complete schema renders, and its initial status reports that it is waiting for navigation data. Open `/signalk-ais-guard/` and exercise sort direction, risk filtering, and search; the page must continue refreshing without browser console errors. Verify `/plugins/signalk-ais-guard/targets` through the WebApp or an authenticated read-only request.
+
+The screenshots in this documentation were captured from this flow on Signal K Server 2.31.1 with Node.js 24.19.0. The default development endpoint is HTTP; `https://localhost:3000` is valid only when a TLS proxy or Signal K TLS configuration is present.
+
 ## Predictor conformance
 
 Every AGTPI predictor requires deterministic fixtures for success and abstention, finite-unit checks, confidence bounds, malformed-history handling, and evidence that input is not mutated. Predictors with learned parameters additionally require versioned model provenance and validation artifacts.

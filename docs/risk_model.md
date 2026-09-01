@@ -18,6 +18,20 @@ When predictive mode is enabled, each registered predictor estimates CPA/TCPA in
 
 Majority voting is categorical. The exposed median predicted CPA/TCPA does not determine risk.
 
+```mermaid
+flowchart TD
+  Reports[Normalized predictor reports] --> Gate[Keep eligible reports at or above confidence threshold]
+  Gate --> Quorum{Eligible reports meet quorum?}
+  Quorum -- no --> Fallback[Use analytical CPA/TCPA]
+  Quorum -- yes --> Alarm{Strict majority alarm?}
+  Alarm -- yes --> A[Alarm]
+  Alarm -- no --> Warn{Strict majority warn-or-alarm?}
+  Warn -- yes --> W[Warning]
+  Warn -- no --> None{Strict majority none?}
+  None -- yes --> N[None]
+  None -- no --> Fallback
+```
+
 ## Validity limits
 
 Analytical CPA/TCPA assumes constant velocity. Built-in predictors relax selected assumptions but remain extrapolations of observed motion. Majority voting cannot compensate for common-mode input errors or correlated model assumptions. A clear result therefore means only that the configured criteria were not satisfied by the admissible evidence at that instant.

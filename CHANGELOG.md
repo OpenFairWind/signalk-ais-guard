@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Documentation
+- Added runtime, ensemble, predictor-interface, station-keeping, and research-pipeline diagrams.
+- Replaced documentation images with screenshots captured from the packaged plugin running in Signal K Server 2.31.1.
+- Documented the default local WebApp URL and clarified that HTTPS requires a configured TLS endpoint.
+
 ## [1.6.0] - 2026-09-01
 
 ### Added

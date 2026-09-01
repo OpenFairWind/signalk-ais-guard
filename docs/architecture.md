@@ -8,7 +8,25 @@ Runtime dependencies remain zero. `plugin/index.js` owns the Signal K lifecycle,
 
 ## Data flow
 
-`Signal K deltas -> bounded vessel histories -> analytical CPA/TCPA + registered AGTPI predictors -> common risk classifier -> majority ensemble -> notifications/API -> WebApp + Plotter Extension + ResourceSet overlay`
+```mermaid
+flowchart LR
+  SK[Signal K vessel deltas] --> Fresh{Navigation fresh?}
+  Fresh -- no --> Unknown[Abstain / unknown]
+  Fresh -- yes --> Hist[Bounded vessel histories]
+  Hist --> CPA[Analytical CPA/TCPA]
+  Hist --> Pred[Registered AGTPI predictors]
+  CPA --> Common[Common threshold classifier]
+  Pred --> Norm[Validate, normalize, confidence gate]
+  Norm --> Common
+  Common --> Vote[Ordinal majority and quorum]
+  Vote -- no quorum or no majority --> CPA
+  Vote --> Risk[Final advisory risk]
+  CPA --> Risk
+  Risk --> Notify[Managed Signal K notifications]
+  Risk --> API[Read-only targets API]
+  API --> Web[Companion WebApp]
+  API --> Plotter[Plotter Extension and ResourceSet]
+```
 
 Own vessel and AIS contacts consume `navigation.position`, `navigation.speedOverGround`, and `navigation.courseOverGroundTrue`. Own vessel additionally consumes `navigation.anchor.state`, `navigation.anchor.position`, selected anchor-watch metadata, and `navigation.state` so collision guarding remains operational in anchored/moored station-keeping modes. Identity metadata (`name`, `mmsi`) is presentation-only. Navigation freshness is derived from navigation observation timestamps, not identity updates.
 
@@ -56,6 +74,16 @@ Any numerical change to a predictor requires a predictor-version change when sem
 
 The `research/` tree is intentionally outside the Signal K runtime but imports predictor modules directly from `plugin/predictors/`. The offline flow is:
 
-`source AIS -> explicit mapping/unit normalization -> canonical JSONL -> validation/statistics -> causal encounter cases -> group-level split -> production AGTPI predictors -> trajectory/risk metrics -> provenance manifest`.
+```mermaid
+flowchart LR
+  Source[Source AIS] --> Map[Versioned field and unit mapping]
+  Map --> Canon[Canonical JSONL observations]
+  Canon --> Validate[Validation and statistics]
+  Validate --> Cases[Causal encounter cases]
+  Cases --> Split[Group-level deterministic split]
+  Split --> Production[Production AGTPI predictors]
+  Production --> Metrics[Trajectory and risk metrics]
+  Metrics --> Manifest[Provenance manifest and checksums]
+```
 
 This prevents research-only copies of predictor mathematics from drifting away from operational code. Dataset adapters and evaluation code may evolve independently of the plugin lifecycle, while predictor identity/version and AGTPI report semantics remain shared. Research outputs are artifacts, not plugin state, and should not be packaged as authoritative model claims without the protocol in `reproducibility.md`.

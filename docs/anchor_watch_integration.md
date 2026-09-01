@@ -16,6 +16,20 @@ AIS Guard also consumes `navigation.state`. Values `anchored` and `moored` are t
 
 ## Effective own-vessel model
 
+```mermaid
+flowchart TD
+  Position[Fresh own position] --> Explicit{Explicit anchored or moored evidence?}
+  Explicit -- yes --> Zero[Effective zero-speed own model]
+  Explicit -- no --> Motion{Fresh SOG and true COG?}
+  Motion -- yes --> Measured[Measured underway motion]
+  Motion -- no --> Near{Measured near-zero SOG?}
+  Near -- yes --> Zero
+  Near -- no --> Abstain[Own-vessel evidence insufficient]
+  Zero --> AIS[AIS collision assessment remains active]
+  Measured --> AIS
+  Abstain --> Unknown[Risk unknown; never inferred safe]
+```
+
 When an explicit anchored or moored state is present and `stationKeepingForceZeroOwnSpeed=true`, the collision engine evaluates incoming AIS traffic against an effective own-vessel velocity of zero at the latest own position. The course is set to a neutral numerical value because course is undefined at zero velocity and has no effect on the analytical velocity vector.
 
 For trajectory predictors, recent own-vessel history is transformed into a stationary-motion history while preserving observation times and positions. This prevents GPS-jitter SOG/COG from being interpreted as intentional own-vessel manoeuvring while retaining temporal evidence for predictor confidence calculations. Target trajectories remain unchanged.

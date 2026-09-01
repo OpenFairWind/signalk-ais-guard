@@ -2,6 +2,8 @@
 
 `signalk-ais-guard` is a dependency-free Signal K server plugin for continuous advisory AIS collision-risk assessment. Version 1.6.0 combines analytical CPA/TCPA with an optional **pluggable trajectory-predictor ensemble** governed by the versioned AIS Guard Trajectory Predictor Interface (AGTPI) v1.
 
+![AIS Guard live target monitor](docs/screenshots/overview.png)
+
 Predictors are deliberately separated from risk thresholds: each predictor reports CPA/TCPA/confidence or abstains; AIS Guard applies one common classifier; the final predictive risk is assessed by ordinal majority vote. If the configured predictor quorum is unavailable, analytical CPA/TCPA is used as fallback.
 
 Three transparent predictors ship by default: `constant-velocity`, `constant-turn-rate`, and `adaptive-turn-acceleration`. They are deterministic kinematic models, not trained AI/ML models. Future predictors can register through the documented interface without modifying ensemble/voting code.
