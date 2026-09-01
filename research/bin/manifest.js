@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+'use strict'
+const fs = require('node:fs'); const cp = require('node:child_process'); const { sha256File, writeJson, parseArgs } = require('../lib/io'); const a = parseArgs(process.argv.slice(2)); if (!a.output || !a.files) throw new Error('usage: manifest --output FILE --files file1,file2,... [--command TEXT]')
+const files=String(a.files).split(',').filter(Boolean); let git=null; try{git=cp.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim()}catch{}; const manifest={schema:'signalk-ais-guard.reproducibility-manifest/1',createdAt:new Date().toISOString(),node:process.version,platform:`${process.platform}-${process.arch}`,gitCommit:git,command:a.command||null,files:files.map(p=>({path:p,bytes:fs.statSync(p).size,sha256:sha256File(p)}))}; writeJson(a.output,manifest); console.log(JSON.stringify({output:a.output,files:files.length}))

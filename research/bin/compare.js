@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+'use strict'
+const { readJson, parseArgs } = require('../lib/io'); const a = parseArgs(process.argv.slice(2)); if (a._.length < 2) throw new Error('usage: compare REPORT_A REPORT_B')
+const [A,B] = a._.map(readJson); const map = r => Object.fromEntries(r.predictors.map(p => [p.predictor.id,p])); const am=map(A), bm=map(B); const rows=[]; for(const id of new Set([...Object.keys(am),...Object.keys(bm)])){const x=am[id]||{}, y=bm[id]||{}; rows.push({predictor:id,cpaMaeM_A:x.cpaMaeM??null,cpaMaeM_B:y.cpaMaeM??null,deltaCpaMaeM:Number.isFinite(x.cpaMaeM)&&Number.isFinite(y.cpaMaeM)?y.cpaMaeM-x.cpaMaeM:null,targetAdeM_A:x.targetAdeM??null,targetAdeM_B:y.targetAdeM??null,deltaTargetAdeM:Number.isFinite(x.targetAdeM)&&Number.isFinite(y.targetAdeM)?y.targetAdeM-x.targetAdeM:null})} console.log(JSON.stringify({schema:'signalk-ais-guard.benchmark-comparison/1',A:a._[0],B:a._[1],rows},null,2))

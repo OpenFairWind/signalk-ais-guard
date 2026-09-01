@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07131f">
+  <title>AIS Guard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="assets/icon.svg" alt=""><div><h1>AIS Guard</h1><p>Live AIS collision-risk monitor</p></div></div>
+    <div id="connection" class="status offline">Connecting…</div>
+  </header>
+  <main>
+    <section class="summary" aria-label="Summary">
+      <div><strong id="countAll">0</strong><span>Targets</span></div>
+      <div><strong id="countAlarm">0</strong><span>Alarms</span></div>
+      <div><strong id="countWarn">0</strong><span>Warnings</span></div>
+      <div><strong id="nearest">—</strong><span>Nearest NM</span></div>
+    </section>
+    <section class="controls">
+      <label>Sort by <select id="sort"><option value="risk">Risk</option><option value="distance">Distance</option><option value="cpa">CPA</option><option value="tcpa">TCPA</option><option value="predictedCpa">Predicted CPA</option><option value="predictedTcpa">Predicted TCPA</option><option value="confidence">Prediction confidence</option><option value="name">Name</option><option value="mmsi">MMSI</option><option value="speed">Speed</option><option value="age">Last update</option></select></label>
+      <button id="direction" type="button" title="Reverse sort order">↑ Asc</button>
+      <label>Show <select id="filter"><option value="all">All targets</option><option value="danger">Warnings + alarms</option><option value="alarm">Alarms only</option><option value="warn">Warnings only</option><option value="clear">Clear only</option></select></label>
+      <label class="search"><span class="sr-only">Search</span><input id="search" type="search" placeholder="Search name or MMSI"></label>
+    </section>
+    <div id="notice" class="notice hidden"></div>
+    <section class="table-wrap">
+      <table>
+        <thead><tr><th>Risk</th><th>Target</th><th>MMSI</th><th>Range</th><th>CPA</th><th>TCPA</th><th>Pred CPA</th><th>Pred TCPA</th><th>Confidence</th><th>Source</th><th>SOG</th><th>COG</th><th>Age</th></tr></thead>
+        <tbody id="targets"><tr><td colspan="13" class="empty">Waiting for AIS targets…</td></tr></tbody>
+      </table>
+    </section>
+    <p class="footnote">Advisory display only. Classical CPA/TCPA assumes constant course and speed; optional prediction extrapolates recent turn and acceleration trends and may be wrong. Maintain a proper lookout and verify with all available means.</p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{
+  "name": "signalk-ais-guard",
+  "version": "1.6.0",
+  "description": "Signal K AIS collision-risk guard using CPA/TCPA, a pluggable trajectory-predictor ensemble, and Freeboard-SK risk overlays.",
+  "main": "plugin/index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "signalk-node-server-plugin",
+    "signalk-webapp",
+    "signalk-category-ais",
+    "signalk-category-notifications",
+    "ais",
+    "cpa",
+    "tcpa",
+    "collision-avoidance",
+    "trajectory-prediction",
+    "collision-risk",
+    "predictive-ai",
+    "freeboard-sk",
+    "plotter-extension",
+    "resource-set"
+  ],
+  "license": "Apache-2.0",
+  "files": [
+    "plugin",
+    "public",
+    "plotterext",
+    "docs",
+    "assets",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "AGENTS.md",
+    "test",
+    "research"
+  ],
+  "signalk-plugin-enabled-by-default": true,
+  "signalk": {
+    "displayName": "AIS Guard",
+    "appIcon": "./assets/icon.svg",
+    "screenshots": [
+      "./docs/screenshots/overview.png",
+      "./docs/screenshots/configuration.png"
+    ]
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "lint": "node --check plugin/index.js && node --check plugin/risk.js && node --check plugin/predictor.js && node --check plugin/predictors/interface.js && node --check plugin/predictors/kinematic.js && node --check plugin/predictors/ensemble.js && node --check plugin/predictors/index.js && node --check plugin/predictors/constant-velocity.js && node --check plugin/predictors/constant-turn-rate.js && node --check plugin/predictors/adaptive-turn-acceleration.js && node --check public/app.js && node --check plotterext/widget.js && node --check plotterext/panel.js && for f in research/bin/*.js research/lib/*.js test/*.js; do node --check \"$f\"; done",
+    "build": "node -e \"require('./plugin/index.js')\"",
+    "prepublishOnly": "npm test && npm run lint",
+    "research:reproduce": "sh research/reproduce-synthetic.sh",
+    "research:validate": "node research/bin/validate-dataset.js",
+    "research:benchmark": "node research/bin/benchmark.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenFairWind/signalk-ais-guard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OpenFairWind/signalk-ais-guard/issues"
+  },
+  "homepage": "https://github.com/OpenFairWind/signalk-ais-guard#readme"
+}

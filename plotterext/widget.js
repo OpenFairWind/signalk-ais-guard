@@ -1,0 +1,3 @@
+'use strict'
+async function refresh(){try{const r=await fetch('/signalk/v2/api/resources/aisGuardRiskOverlay',{credentials:'include',cache:'no-store'});if(!r.ok)throw new Error(String(r.status));const j=await r.json();const x=j['live-risk-overlay']||Object.values(j)[0];const n=x&&Number.isFinite(x.hazardousTargetCount)?x.hazardousTargetCount:0;document.getElementById('count').textContent=String(n);document.getElementById('label').textContent=n===1?'hazard':'hazards'}catch(_){document.getElementById('count').textContent='?';document.getElementById('label').textContent='unavailable'}}
+refresh();setInterval(refresh,2000)

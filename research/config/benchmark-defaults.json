@@ -1,0 +1,16 @@
+{
+  "historySeconds": 180,
+  "minimumSamples": 4,
+  "minimumHistorySeconds": 20,
+  "horizonMinutes": 20,
+  "stepSeconds": 5,
+  "staleSeconds": 90,
+  "maxTurnRateDegreesPerMinute": 30,
+  "maxAccelerationMps2": 0.25,
+  "predictionMinimumConfidence": 0.35,
+  "predictionMinimumVotes": 2,
+  "immediateRangeNm": 0.1,
+  "alarmCpaNm": 0.25,
+  "warnCpaNm": 0.5,
+  "maxTcpaMinutes": 20
+}

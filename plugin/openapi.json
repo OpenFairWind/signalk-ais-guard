@@ -1,0 +1,271 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AIS Guard API",
+    "version": "1.6.0",
+    "description": "Read-only AIS collision-risk snapshot API including standardized trajectory-predictor ensemble reports, representative trajectory geometry, and majority-vote risk assessment."
+  },
+  "paths": {
+    "/targets": {
+      "get": {
+        "summary": "Get current AIS targets, CPA/TCPA, predictor reports and ensemble vote",
+        "responses": {
+          "200": {
+            "description": "Current AIS Guard state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "ownVesselReady": {
+                      "type": "boolean"
+                    },
+                    "ownVesselMode": {
+                      "type": "string",
+                      "enum": ["underway", "stationary", "anchored", "moored"]
+                    },
+                    "anchorWatchActive": {
+                      "type": "boolean"
+                    },
+                    "navigationState": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "predictiveAiEnabled": {
+                      "type": "boolean"
+                    },
+                    "predictorInterfaceVersion": {
+                      "type": "string"
+                    },
+                    "enabledPredictors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PredictorIdentity"
+                      }
+                    },
+                    "targetCount": {
+                      "type": "integer"
+                    },
+                    "targets": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Target"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PredictorIdentity": {
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "VoteCount": {
+        "type": "object",
+        "required": [
+          "alarm",
+          "warn",
+          "none"
+        ],
+        "properties": {
+          "alarm": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "warn": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "none": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "PredictorReport": {
+        "type": "object",
+        "properties": {
+          "predictor": {
+            "$ref": "#/components/schemas/PredictorIdentity"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "abstain"
+            ]
+          },
+          "eligible": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "cpaNm": {
+            "type": "number",
+            "nullable": true
+          },
+          "tcpaMinutes": {
+            "type": "number",
+            "nullable": true
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "nullable": true
+          },
+          "risk": {
+            "type": "string",
+            "enum": [
+              "alarm",
+              "warn",
+              "none",
+              "unknown"
+            ]
+          }
+        }
+      },
+      "Target": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "mmsi": {
+            "type": "string",
+            "nullable": true
+          },
+          "risk": {
+            "type": "string",
+            "enum": [
+              "alarm",
+              "warn",
+              "none",
+              "unknown"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "riskSource": {
+            "type": "string",
+            "description": "Classical fallback/source or prediction-ensemble when quorum is available."
+          },
+          "rangeNm": {
+            "type": "number",
+            "nullable": true
+          },
+          "cpaNm": {
+            "type": "number",
+            "nullable": true
+          },
+          "tcpaMinutes": {
+            "type": "number",
+            "nullable": true
+          },
+          "predictedCpaNm": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median CPA among eligible predictor reports; descriptive, not itself the voting variable."
+          },
+          "predictedTcpaMinutes": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median TCPA among eligible predictor reports."
+          },
+          "predictionConfidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "nullable": true,
+            "description": "Median confidence among eligible predictor reports."
+          },
+          "predictionModel": {
+            "type": "string",
+            "nullable": true
+          },
+          "predictionVotes": {
+            "$ref": "#/components/schemas/VoteCount"
+          },
+          "predictorReports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PredictorReport"
+            }
+          },
+          "speedKnots": {
+            "type": "number",
+            "nullable": true
+          },
+          "courseDegrees": {
+            "type": "number",
+            "nullable": true
+          },
+          "position": {
+            "type": "object",
+            "nullable": true
+          },
+          "ageSeconds": {
+            "type": "number"
+          },
+          "stale": {
+            "type": "boolean"
+          },
+          "representativePredictor": {
+            "$ref": "#/components/schemas/PredictorIdentity"
+          },
+          "predictedOwnPath": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object"
+            }
+          },
+          "predictedTargetPath": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object"
+            }
+          },
+          "predictedClosestApproachPoint": {
+            "type": "object",
+            "nullable": true,
+            "description": "Midpoint of representative predicted own/target positions at closest approach; not a guaranteed collision location."
+          }
+        }
+      }
+    }
+  }
+}

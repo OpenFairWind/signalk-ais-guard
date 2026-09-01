@@ -1,0 +1,14 @@
+{
+  "timestamp": "BaseDateTime",
+  "mmsi": "MMSI",
+  "latitude": "LAT",
+  "longitude": "LON",
+  "speed": "SOG",
+  "speedUnit": "knots",
+  "course": "COG",
+  "courseUnit": "degrees",
+  "optional": {
+    "vesselName": "VesselName",
+    "vesselType": "VesselType"
+  }
+}
