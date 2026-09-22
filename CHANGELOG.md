@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-09-22
+
 ### Documentation
 - Added runtime, ensemble, predictor-interface, station-keeping, and research-pipeline diagrams.
 - Replaced documentation images with screenshots captured from the packaged plugin running in Signal K Server 2.31.1.

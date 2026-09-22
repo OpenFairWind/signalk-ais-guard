@@ -1,6 +1,6 @@
 {
   "name": "signalk-ais-guard",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Signal K AIS collision-risk guard using CPA/TCPA, a pluggable trajectory-predictor ensemble, and Freeboard-SK risk overlays.",
   "main": "plugin/index.js",
   "type": "commonjs",
